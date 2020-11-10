@@ -69,18 +69,18 @@ It is reasonable to start with an explanation of the function's syntax. They are
 Functions in Ligo are defined using the \`function\` keyword followed by their name, parameters, return type definitions and body.
     
 \`\`\`jsx
-    function func_name (var arg0 : arg0_type[; var arg1 : arg1_type[ ... ]]) : return is 
-      block {...} with return_value
+function func_name (var arg0 : arg0_type[; var arg1 : arg1_type[ ... ]]) : return is 
+  block {...} with return_value
 \`\`\`
     
 If few instructions should be executed, the body is block constructions.
     
 \`\`\`jsx
-  function increment (var n : int) : int is 
-    block { 
-      n := n + 1n;
-      n := n + 3n;
-    } with n
+function increment (var n : int) : int is 
+  block { 
+    n := n + 1n;
+    n := n + 3n;
+  } with n
 \`\`\`
     
 If the logic can be represented by a single expression than block can be omitted. 

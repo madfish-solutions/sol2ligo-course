@@ -2,6 +2,7 @@ import React from "react";
 import MonacoEditor from "react-monaco-editor";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
+import { Link } from "woozie";
 
 import Layout from "./Layout";
 import { sections } from "../resources/sections";
@@ -28,14 +29,14 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
           {/* {section.description} */}
         </article>
         <div className="flex justify-center h-12 w-full bg-gray-100">
-          <a
-            href={`/section/${selectedSection ? selectedSection - 1 : 0}`}
+          <Link
+            to={`/section/${selectedSection ? selectedSection - 1 : 0}`}
             className="h-full w-full truncate py-1 px-4 hover:bg-gray-200 text-center leading-10 font-medium text-indigo-600"
           >
             Previous
-          </a>
-          <a
-            href={`/section/${
+          </Link>
+          <Link
+            to={`/section/${
               selectedSection < sections.length - 1
                 ? selectedSection + 1
                 : selectedSection
@@ -43,7 +44,7 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
             className="h-full w-full truncate py-1 px-4 hover:bg-gray-200 text-center leading-10 font-medium text-indigo-600 border-l-2 border-gray-200"
           >
             Next
-          </a>
+          </Link>
         </div>
       </div>
       <div className="flex flex-col w-full max-w-50 h-full border-l-2 border-gray-100">

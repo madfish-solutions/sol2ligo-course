@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import { Link } from "woozie";
 
 import { sections } from "../resources/sections";
 
@@ -16,8 +17,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   title,
   isActive,
 }) => (
-  <a
-    href={link}
+  <Link
+    to={link}
     className={
       "group flex flex-row no-wrap w-full truncate max-w-xs py-1 px-4 hover:bg-gray-200"
     }
@@ -42,7 +43,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     >
       {title}
     </div>
-  </a>
+  </Link>
 );
 
 interface SidebarProps {
