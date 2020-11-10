@@ -85,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 title={section.title}
                 numeration={`${idx + 1}`}
                 isActive={idx === selectedSection}
-                link="#"
+                link={`/section/${idx}`}
               />
             ))}
           </div>
