@@ -35,7 +35,7 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
       <div className="flex flex-col w-full max-w-50 h-full border-l-2 border-gray-100">
         <MonacoEditor
           language="sol"
-          theme="vs-light"
+          theme="vs-dark"
           value={section.solidity}
           options={{
             fontSize: 14,
@@ -49,7 +49,7 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
         <hr />
         <MonacoEditor
           language="pascaligo"
-          theme="vs-light"
+          theme="vs-dark"
           value={section.ligo}
           options={{
             fontSize: 14,

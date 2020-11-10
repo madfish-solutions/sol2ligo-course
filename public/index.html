@@ -15,6 +15,152 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <script>
+      window._solc = {}
+      window._require_hash = {};
+      window.require_register = function(file) {
+        var orig_file = file;
+        var ret = {}
+        while(reg_ret = /\/(.*)/.exec(file)) {
+          file = reg_ret[1];
+          if (window._require_hash['./'+file]) {
+            console.error("re-register", './'+file, "orig_file", orig_file);
+            continue;
+          }
+          window._require_hash['./'+file] = ret;
+        }
+        return ret;
+      }
+      window.require = function(file) {
+        file = file.replace(/^(\.\.\/)+/, './');
+        if (!window._require_hash[file]) {
+          throw new Error(`can't require ${file}`)
+        }
+        return window._require_hash[file];
+      }
+    </script>
+    <script src="/solc/soljson-v0.4.26+commit.4563c3fc.js"></script>
+    <script src="/solc/soljson-v0.5.11+commit.c082d0b4.js"></script>
+    <script src="/solc/sol_wrapper.js"></script>
+    <script src="/common/fy.js"></script>
+    <script src="/common/codegen.js"></script>
+    <script src="/lib/config.js"></script>
+    <script src="/common/type.js"></script>
+    <script src="/lib/type_safe.js"></script>
+    <script src="/common/ast4gen.js"></script>
+    <script src="/lib/ast.js"></script>
+    <script src="/lib/type_generalize.js"></script>
+    <script src="/lib/translate_var_name.js"></script>
+    
+    <script src="/lib/type_inference/common.js"></script>
+    <script src="/lib/type_inference/stage1.js"></script>
+    <script src="/lib/type_inference/stage2.js"></script>
+    <script src="/lib/type_inference.js"></script>
+    
+    <script src="/lib/translate_ligo.js"></script>
+    <script src="/lib/translate_ligo_default_state.js"></script>
+    <script src="/lib/solidity_to_ast4gen.js"></script>
+    <script src="/lib/ast_builder.js"></script>
+    <script src="/lib/transforms/default_walk.js"></script>
+    <script src="/lib/transforms/collect_fn_call.js"></script>
+    <script src="/lib/transforms/placeholder_replace.js"></script>
+    
+    <script src="/lib/transforms/var_translate.js"></script>
+    <script src="/lib/transforms/require_distinguish.js"></script>
+    <script src="/lib/transforms/fix_missing_emit.js"></script>
+    <script src="/lib/transforms/fix_modifier_order.js"></script>
+    <script src="/lib/transforms/for3_unpack.js"></script>
+    <script src="/lib/transforms/math_funcs_convert.js"></script>
+    <script src="/lib/transforms/ass_op_unpack.js"></script>
+    <script src="/lib/transforms/modifier_unpack.js"></script>
+    <script src="/lib/transforms/inheritance_unpack.js"></script>
+    <script src="/lib/transforms/deep_check_storage_and_oplist_use.js"></script>
+    <script src="/lib/transforms/decl_storage_and_oplist_inject.js"></script>
+    <script src="/lib/transforms/mark_last.js"></script>
+    <script src="/lib/transforms/router_collector.js"></script>
+    <script src="/lib/transforms/add_router.js"></script>
+    <script src="/lib/transforms/collect_fn_decl.js"></script>
+    <script src="/lib/transforms/call_storage_and_oplist_inject.js"></script>
+    <script src="/lib/transforms/replace_enums_by_nat.js"></script>
+    <script src="/lib/transforms/intrinsics_converter.js"></script>
+    <script src="/lib/transforms/erc20_converter.js"></script>
+    <script src="/lib/transforms/erc721_converter.js"></script>
+    <script src="/lib/transforms/return_op_list_count.js"></script>
+    <script src="/lib/transforms/address_calls_converter.js"></script>
+    <script src="/lib/transforms/split_nested_index_access.js"></script>
+    <script src="/lib/transforms/erc_detector.js"></script>
+    <script src="/lib/transforms/make_calls_external.js"></script>
+    <script src="/lib/transforms/add_burn_address.js"></script>
+    <script src="/lib/transforms/cast_to_address.js"></script>
+    <script src="/lib/transforms/contract_object_to_address.js"></script>
+    <script src="/lib/transforms/add_pow.js"></script>
+    <script src="/lib/transforms/erc20_interface_converter.js"></script>
+    <script src="/lib/transforms/erc721_interface_converter.js"></script>
+    <script src="/lib/transforms/split_chain_assignment.js"></script>
+    
+    <script src="/lib/ast_transform.js"></script>
+    <script>
+      var solidity_to_ast4gen = require("./solidity_to_ast4gen");
+      var ast_transform = require("./ast_transform");
+      var type_inference = require("./type_inference");
+      var translate_ligo = require("./translate_ligo");
+      var translate_ligo_default_state = require("./translate_ligo_default_state");
+    </script>
+    <script>
+      var warning_list;
+      var argv = {
+        router : true,
+        contract : "",
+        disable_enums_to_nat : false
+      }
+      function compile(code, argv = {
+        router: false,
+        disable_enums_to_nat: true,
+        contract: ""
+      }) {
+        return new Promise((res, rej) => {
+          var perr_old = window.perr;
+          var puts_old = window.puts;
+          warning_list = [];
+          window.perr = function() {
+            var arg_list = Array.prototype.slice.call(arguments);
+            var str_list = arg_list.map((t)=>{
+              if (t.formattedMessage) { // solc errors
+                return t.formattedMessage;
+              } else {
+                return ''+t;
+              }
+            });
+            warning_list.push(str_list.join(" "));
+          }
+          window.puts = function() {
+            warning_list.push(Array.prototype.join.call(arguments, " "));
+          }
+          try {
+            opt = {
+              router  : argv.router,
+              contract : argv.contract,
+              replace_enums_by_nats: !argv.disable_enums_to_nat
+            }
+            const solidity_ast = ast_gen(code);
+            let ast = solidity_to_ast4gen.gen(solidity_ast);
+            ast = ast_transform.pre_ti(ast, opt);
+            ast = type_inference.gen(ast, opt);
+            ast = ast_transform.post_ti(ast, opt);
+            const result = translate_ligo.gen(ast, opt);
+            const result_default_state = translate_ligo_default_state.gen(ast, opt);
+            res({result, result_default_state});
+          } catch (err) {
+            warning_list.push(err.stack)
+            rej(err);
+          }
+          window.perr = perr_old;
+          window.puts = puts_old;
+        });
+      }
+
+      window.compile = compile;
+    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
