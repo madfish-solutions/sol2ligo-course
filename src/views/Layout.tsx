@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "woozie";
 import Sidebar from "./Sidebar";
 
 interface LayoutProps {
@@ -17,20 +18,24 @@ const Layout: React.FC<LayoutProps> = ({ children, selectedSection }) => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex justify-end items-center py-4 px-6 bg-white border-b-4 border-gray-200 bg-gray-100">
           <div className="flex text-md">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="font-medium text-gray-500 hover:text-gray-900 mx-5"
             >
               Get Started
-            </a>
+            </Link>
             <a
-              href="/"
+              href="https://github.com/madfish-solutions/sol2ligo"
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-medium text-gray-500 hover:text-gray-900 mx-5"
             >
               Github
             </a>
             <a
-              href="/"
+              href="https://madfish-solutions.github.io/sol2ligo/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-medium text-indigo-600 hover:text-gray-900 mx-5"
             >
               Try sol2ligo
