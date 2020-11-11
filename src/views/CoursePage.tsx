@@ -29,6 +29,7 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
   useEffect(() => {
     setSolidityCode(section.solidity);
     setLigoCode(section.ligo);
+    setTranspilationStatus(TranspilationStatus.success);
   }, [section]);
 
   return (
