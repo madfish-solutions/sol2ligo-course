@@ -26,7 +26,8 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
 
   useEffect(() => {
     setSolidityCode(section.solidity);
-  }, [section.solidity]);
+    setLigoCode(section.ligo)
+  }, [section]);
 
   return (
     <Layout selectedSection={selectedSection}>
