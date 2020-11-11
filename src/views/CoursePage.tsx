@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -20,8 +20,13 @@ enum TranspilationStatus {
 
 const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
   const section = sections[selectedSection];
+  const [solidityCode, setSolidityCode] = useState(section.solidity);
   const [ligoCode, setLigoCode] = useState(section.ligo);
   const [transpilationStatus, setTranspilationStatus] = useState<TranspilationStatus>(TranspilationStatus.success);
+
+  useEffect(() => {
+    setSolidityCode(section.solidity);
+  }, [section.solidity]);
 
   return (
     <Layout selectedSection={selectedSection}>
@@ -61,7 +66,7 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
         <MonacoEditor
           language="sol"
           theme="vs-dark"
-          defaultValue={section.solidity}
+          value={solidityCode}
           options={{
             fontSize: 14,
             minimap: {
@@ -69,6 +74,7 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
             },
           }}
           onChange={async (code) => {
+            setSolidityCode(code);
             setTranspilationStatus(TranspilationStatus.transpiling);
             if (window && (window as any).compile) {
               try {
