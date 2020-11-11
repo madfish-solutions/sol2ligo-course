@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "sol2ligo handbook",
+  "name": "sol2ligo handbook - guide to migration from Solidity to Tezos blockchain LIGO language",
   "icons": [
     {
       "src": "favicon.ico",
