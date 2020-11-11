@@ -829,35 +829,734 @@ function testDynamicSized (const self : state) : (state) is
   },
   {
     title: "Tuples + Practice 1",
+    description: `Tuples are fixed-size arrays that can contain a number of elements of different types in the given order and that are accessible by index.
+
+The tuples definition and accessing by index is presented in the example below:
+
+\`\`\`jsx
+(* syntax: const tuple_name : type0 [* type1 [...]] = (value0[, value1[,...]] *)
+const pasport_code : string * nat = ("XP", "31432154928");
+(* syntax: tuple_name.index *)
+const serial_number : string = pasport_code.0;
+\`\`\`
+
+**Task**
+
+Update the example from previous task using tuples:
+
+1. Replace \`a1\` type inside the \`state\` type with tuple of 4 \`nat\`  elements
+2. Update \`a1\` declaration
+3. Set \`len\` to \`4n\`, as the tuples doesn't have the size method.
+4. Get the first element of the tuple and store it to  \`element\` variable.`,
+    solidity: `contract Test {
+  uint[] a1;
+    
+	function testFixedSized() public {
+    uint[4] memory a0 = [uint(1), 2, 3, 4];
+
+    uint len = a0.length;
+    uint element = a0[1];
+  }
+}`,
+    ligo: `type state is record
+  a1 : map(nat, nat);
+end;
+
+function testFixedSized (const res__unit : unit) : (unit) is
+  block {
+    const a0 : map(nat, nat) = map
+      0n -> abs(1);
+      1n -> 2n;
+      2n -> 3n;
+      3n -> 4n;
+    end;
+    const len : nat = size(a0);
+    const element : nat = (case a0[1n] of | None -> 0n | Some(x) -> x end);
+  } with (unit);`,
   },
   {
     title: "Lists + Practice 2",
+    description: `The list is a dynamic-sized lineal collection of values of the same type.  Elements cannot be deleted or accessed by index. Linear means that, in order to reach an element in a list, we must visit all the elements before, and thus there are only operations to iterate through the lists.
+
+Consider the definition of the list and adding the elements to it:
+
+\`\`\`jsx
+(* syntax: const list_name : list(element_type) = list[ element0[; element1[;...]] ] *)
+(* empty lists *)
+var l : list(int) = list[];
+l := (nil : list(nat));
+
+(* list with initial elements *)
+l := list[1; 2; 3;];
+
+(*syntax: list_name := element # list_name; *)
+(* adding to list *)
+l := 4 # l;
+\`\`\`
+
+There are 3 types of iterations: \`iter\`, \`fold\`, \`map\`.
+
+The iterated operation is an iteration over the list with a unit return value. It is useful to enforce certain invariants on the element of a list or fail. Usage:
+
+\`\`\`jsx
+function iterate (const i : int) : unit is
+    if i > 3 then Unit else (failwith ("Too big") : unit)
+var l : list(int) = list[1; 2; 3;];
+List.iter (iterate, l);
+\`\`\`
+
+Map operation changes all the elements of a given list by applying to them a function. Can be used for deleting an element from the collection. Example:
+
+\`\`\`jsx
+var l : list(int) = list[1; 2; 3;];    
+var index : nat = 0n;
+var counter : nat = 0n;
+function delete_by_index (const element : nat): nat is 
+  block {
+    counter := counter + 1n;
+  } with if counter = index then 0n else element;  
+l := List.map (delete_by_index, l);
+\`\`\`
+
+A folded operation is an iteration over the list with an accumulated return value. The folded function takes two arguments: an accumulator and the structure element at hand, with which it then produces a new accumulator. The last accumulator is returned from the function. Can be considered as an expensive way to get the element at a given index. 
+
+\`\`\`jsx
+var l : list(int) = list[1; 2; 3;];    
+var index : nat = 0n;
+var counter : nat = 0n;
+function get_by_index (const found : nat; const element : nat): nat is 
+  block {
+    counter := counter + 1n;
+  } with if counter = index then element else found;  
+const element : nat = List.fold (get_by_index, l, 0n);
+\`\`\`
+
+**Task**
+
+Update the example from previous task using lists:
+
+1. Replace \`a1\` type inside the \`state\` type with list of \`nat\`  type
+2. Update \`a1\` declaration
+3. Find the element at the index by  \`List.fold\` operation
+4. Add element \`1n\` in the end of the list
+5. Remove the element at the index by \`List.map\` operation.`,
+    solidity: `contract Test {
+  uint[] a1;
+    
+	function testDynamicSized() public {
+    a1 = new uint[](5);
+    
+    uint len = a1.length;
+    uint element = a1[1];
+    
+    a1.push(1);
+    delete a1[0];
+    // a1.pop();
+  }
+}`,
+    ligo: `type state is record
+a1 : map(nat, nat);
+end;
+
+function testDynamicSized (const self : state) : (state) is
+block {
+  self.a1 := map end (* args: 5 *);
+  const len : nat = size(self.a1);
+  const element : nat = (case self.a1[1n] of | None -> 0n | Some(x) -> x end);
+  const tmp_0 : map(nat, nat) = self.a1;
+  tmp_0[size(tmp_0)] := 1n;
+  remove 0n from map self.a1;
+} with (self);`,
   },
   {
     title: "Sets + Practice  3",
+    description: `Set is the unordered dynamic-sized array of unique values of the same type. Just like in lists elements cannot be accessed by index but the defined operations include iterations, adding and removing elements, checking if the element is present.
+
+Consider set basic syntax that resembles operations on lists:
+
+\`\`\`jsx
+(* syntax: const set_name : set(element_type) = set[ element0[; element1[;...]] ] *)
+(* empty sets *)
+var s : set(int) = set[];
+s := (set[] : set(nat));
+
+(* set with initial elements *)
+s := set[1; 2; 3;];
+
+(* syntax: set_name := Set.add(element, set_name) *)
+(* adding to set *)
+s := Set.add(4, s);
+
+(* syntax: set_name := Set.remove(element, set_name) *)
+(* removing from set *)
+s := Set.remove(1, s);
+
+(* syntax: Set.size(set_name) *)
+(* get set size *)
+const len : nat = Set.size(s);
+
+(* syntax: set_name contains element *)
+(* check element presents *)
+const exists : bool = s contains 5;
+\`\`\`
+
+Iteration operations are the same as for lists but denoted by \`Set.iter\`, \`Set.fold\`, \`Set.map\`.
+
+**Task**
+
+Update the example below using sets:
+
+1. Replace \`a1\` type inside the \`state\` type with set of \`nat\`  type
+2. Update \`a1\` declaration
+3. Update the loop for checking if the element exists in collection using \`contains\` 
+4. Add element at the index by  \`Set.add\` operation
+5. Remove the first added element \`1n\` by \`Set.remove\` operation; note: as set isn't ordered collection, the elements are deleted by value but not index.`,
+    solidity: `contract Test {
+  uint[] a1;
+    
+  function testDynamicSized() public {
+    a1 = new uint[](5);
+    
+    uint len = a1.length;
+
+    bool isInArray;
+    
+    for (uint i=0; i < a1.length; i++) {
+        isInArray = a1[i] == 5 ? true : isInArray;
+    }
+    
+    a1.push(1);
+    delete a1[0];
+  }
+}`,
+    ligo: `type state is record
+  a1 : map(nat, nat);
+end;
+
+function testDynamicSized (const self : state) : (state) is
+  block {
+    self.a1 := map end (* args: 5 *);
+    const len : nat = size(self.a1);
+    const isInArray : bool = False;
+    const i : nat = 0n;
+    while (i < size(self.a1)) block {
+      isInArray := (case ((case self.a1[i] of | None -> 0n | Some(x) -> x end) = 5n) of | True -> True | False -> isInArray end);
+      i := i + 1n;
+    };
+    const tmp_0 : map(nat, nat) = self.a1;
+    tmp_0[size(tmp_0)] := 1n;
+    remove 0n from map self.a1;
+  } with (self);`,
   },
   {
     title: "Complex Types Summary",
+    description: `There are 3 complex types in Solidity:
+
+- arrays;
+- structs;
+- mappings.
+
+Meanwhile Ligo is more diverse:
+
+- Records: struct-like objects, the fields can be accessed and modified by name; fields can be any types, except \`big_map\`;
+- Tuples: fixed-size array that can contain elements of different types; elements can be  accessed by index;
+- Lists: a dynamic-sized array of the same type, elements cannot be deleted or accessed by index; there are operations to iterate through the lists;
+- Sets: dynamic-sized array with unique values of the same type, elements cannot be accessed by index; there are operations to iterate, add, remove, check if the element is present;
+- Maps and big maps: dictionaries, big maps are cheaper to use and their values are accessed by keys only meanwhile maps consume more gas but there is an operation to iterate through its pairs.
+- Options: None/Some wrapper;
+- Units: absence of type, similar to \`void\` in C/C++;
+- Variants: the type, that wraps some other types, similar to unions.
+
+Ligo doesn't support the type that implements all the operations that can be done on Solidity array so migration from one language to another can be quite tricky. sol2ligo transpiles arrays to maps but it may be an inappropriate approach for the particular solution.  
+
+The other mentioned types are declared as following and were discussed in previous chapters:
+
+\`\`\`jsx
+// tuple
+const t : (nat * int) = (10n * 1);
+// list
+const l : list(nat) = list [21n; 42n; 21n];
+// set
+const s : set(nat) = set [1n; 2n; 3n];
+// map
+\`\`\``,
+    solidity: `contract Test {
+  mapping(address => uint) public addressToUintMap;
+  uint[] public uArray;
+  struct SimpleSruct {
+      string s;
+      bytes b;
+  }
+    
+  function test() public view {
+      int32[3] memory iArray = [-11335678, 2343, 321323];
+      SimpleSruct memory s = SimpleSruct("Ligo", "42");
+  }
+}`,
+    ligo: `type test_SimpleSruct is record
+  s : string;
+  b : bytes;
+end;
+
+type state is record
+  addressToUintMap : map(address, nat);
+  uArray : map(nat, nat);
+end;
+
+const test_SimpleSruct_default : test_SimpleSruct = record [ s = "";
+  b = ("00": bytes) ];
+
+function test (const res__unit : unit) : (unit) is
+  block {
+    const iArray : map(nat, int) = map
+      0n -> -(11335678);
+      1n -> 2343;
+      2n -> 321323;
+    end;
+    const s : test_SimpleSruct = record [ s = "Ligo";
+      b = "42" ];
+  } with (unit);
+  `,
   },
   {
     title: "Type Aliases + Practice 4",
+    description: `Despite simplicity, Ligo has some features that are not present in Solidity but that makes the developer's life better. One of them is type aliases denoted by \`type\` keyword.
+
+For instance:
+
+\`\`\`jsx
+type language is string
+type chain is string
+const blockchain_info : (language * chain) = ("Archetype", "Tezos")
+\`\`\`
+
+**Task**
+
+Let's consider the dummy contract.  \`userBags\` is the mapping of all users belongings in their bags. There are exactly three slots for things and the staff should be placed in the exact order: key, pen, eraser. The \`putBagsThings\` prepare bags for the transaction sender. 
+
+In the Solidity, as you see the code is quite straightforward but the compiled version seems is quite overloaded. 
+
+Refactor the code:
+
+1. Declare alias for \`key_type\` and \`stationery_type\`.
+2. Replace the \`map(nat, string)\` with tuple of type \`(key_type * stationery_type * stationery_type\`) 
+3. Update key, pen, eraser types
+4. Change the step of setting new map value`,
+    solidity: `contract Test {
+  // user address => [keys, pen, eraser]
+  mapping(address => string[3]) public userBags;
+
+  function putBagsThings() public {
+    string memory key = "home key";
+    string memory pen = "red pen";
+    string memory eraser = "small eraser";
+
+    userBags[msg.sender] = [key, pen, eraser];
+  }
+}`,
+    ligo: `type state is record
+  userBags : map(address, map(nat, string));
+end;
+
+function putBagsThings (const self : state) : (state) is
+  block {
+    const key : string = "home key";
+    const pen : string = "red pen";
+    const eraser : string = "small eraser";
+    self.userBags[Tezos.sender] := map
+      0n -> key;
+      1n -> pen;
+      2n -> eraser;
+    end;
+  } with (self);`,
   },
   {
     title: "Conditions",
+    description: `In Ligo conditions must have both \`if\` and \`else\` branches and have the following syntax:
+
+\`\`\`jsx
+(* syntax: if condition then actions0 else actions1 *)
+(* condition with one instruction in branch*)
+if a = b then a := 10n else b := 1n;
+
+(* condition with few actions *)
+if a = b then block {
+  a := 10n;
+  b := 0n; 
+} else b := 1n;
+
+(* condition with missing block *)
+if a = b then a := 10n else skip;
+\`\`\``,
+    solidity: `contract Test {
+	function test() public {
+    int a = 3;
+    int b = 9;
+    if (a == b) a = 10; 
+    else b = 1;
+    
+    if (a == b) {
+        a = 10;
+        b = 0;
+    } else b = 1;
+    
+    if (a == b) a = 10; 
+  }
+}`,
+    ligo: `type state is unit;
+
+function test (const res__unit : unit) : (unit) is
+  block {
+    const a : int = 3;
+    const b : int = 9;
+    if (a = b) then block {
+      a := 10;
+    } else block {
+      b := 1;
+    };
+    if (a = b) then block {
+      a := 10;
+      b := 0;
+    } else block {
+      b := 1;
+    };
+    if (a = b) then block {
+      a := 10;
+    } else block {
+      skip
+    };
+  } with (unit);`,
   },
   {
     title: "Typecasting",
+    description: `Solidity has a convenient type casting but in Ligo it can be a bit tricky. The example of the most common conversion:
+\`\`\`jsx
+(* nat <- int *)
+const u : nat = abs(1);
+(* int <- nat *)
+const i : int = int(1n);
+(* address <- string *)
+const a : address = ("tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb" : address);
+(* tez <- nat *)
+const tz : tez = u * 1mutez;
+(* nat <- tez *)
+const n : nat = tz / 1mutez;
+(* tez <- int *)
+const t : tez = abs(i) * 1mutez;
+(* int <- tez *)
+const i : int = int(t / 1mutez);
+(* nat <- timestamp *)
+const n : nat = abs(now - ("1970-01-01T00:00:00Z" : timestamp));
+(* timestamp <- nat *)
+const t : timestamp = ("1970-01-01T00:00:00Z" : timestamp) + int(u);
+(* timestamp <- int *)
+const t : timestamp = ("1970-01-01T00:00:00Z" : timestamp) + i;
+(* int <- timestamp *)
+const i : int = now - ("1970-01-01T00:00:00Z" : timestamp);
+(* bytes <- nat *)
+const b : bytes = Bytes.pack(u);
+(* nat -> bytes *)
+const u : nat = Bytes.unpack(b);
+(* bytes <- int *)
+const b : bytes = Bytes.pack(i);
+(* int -> bytes *)
+const i : int = Bytes.unpack(b);
+(* bytes <-  tez *)
+const b : bytes = Bytes.pack(tz);
+(*  tez -> bytes *)
+const tz : tez = Bytes.unpack(b);
+(* bytes <- timestamp *)
+const b : bytes = Bytes.pack(t);
+(*  timestamp -> bytes *)
+const t : timestamp = Bytes.unpack(b);
+(* bytes <- address | string *)
+const b : bytes = Bytes.pack(a);
+(* address -> bytes *)
+const a : address = Bytes.unpack(b);
+(* bytes <- string *)
+const b : bytes = Bytes.pack("just a string");
+(* string-> bytes *)
+const s : string = Bytes.unpack(b);
+\`\`\``,
+    solidity: `contract Test {
+  function test() public payable {
+      uint u = 1;
+      uint i = 1;
+      uint uu = uint(i);
+      uint ii = uint(u);
+      uint n0 = msg.value; 
+      uint t0 = now;
+    }
+}`,
+    ligo: `type state is unit;
+
+function test (const res__unit : unit) : (unit) is
+  block {
+    const u : nat = 1n;
+    const i : nat = 1n;
+    const uu : nat = abs(i);
+    const ii : nat = abs(u);
+    const n0 : nat = (amount / 1mutez);
+    const t0 : nat = abs(now - ("1970-01-01T00:00:00Z" : timestamp));
+  } with (unit);`,
   },
   {
     title: "Loops",
+    description: `There are two keywords for iterations in Ligo:  \`for\` and \`while\`. Unlike Solidity, Ligo doesn't support \`continue\` or \`break\` operations. Usage:
+
+\`\`\`jsx
+(* syntax:
+while condition block {
+    action0;
+    ...
+    actionN;
+}; *)
+while y =/= 0n block {
+    z := x mod y;
+    y := y - 1n;
+}
+(* syntax:
+for iterator := init to last block {
+    action0;
+    ...
+    actionN;
+} )*
+for i := 1 to 10 block {
+    acc := acc + i
+}
+\`\`\`
+
+**Note:** in the example below, the code won't be compiled as the blocks with \`continue\` and \`break\` comments are empty. Add \`skip\` instruction to fix it.`,
+    solidity: `contract Test {
+
+	function test() public {
+  uint sum;
+  uint j;
+    for (uint j; j < 10; j++) {
+        sum +=j;
+    }
+    
+    sum=0;
+    j=0;
+    while(j < 10) {
+        sum +=j;
+        j++;
+    }
+    
+    // sum=0;
+    // j=0;
+    // do {
+    //     sum +=j;
+    //     j++;
+    // } while (j < 10);
+    
+    sum=0;
+    j=0;
+    while(j < 10) {
+        if (j == 5) continue;
+        sum +=j;
+        if (sum % 5 == 1) break;
+        j++;
+    }
+  }
+}`,
+    ligo: `type state is unit;
+
+function test (const res__unit : unit) : (unit) is
+  block {
+    const sum : nat = 0n;
+    const j : nat = 0n;
+    const j : nat = 0n;
+    while (j < 10n) block {
+      sum := (sum + j);
+      j := j + 1n;
+    };
+    sum := 0n;
+    j := 0n;
+    while (j < 10n) block {
+      sum := (sum + j);
+      j := j + 1n;
+    };
+    sum := 0n;
+    j := 0n;
+    while (j < 10n) block {
+      if (j = 5n) then block {
+        (* \`continue\` statement is not supported in LIGO *);
+      } else block {
+        skip
+      };
+      sum := (sum + j);
+      if ((sum mod 5n) = 1n) then block {
+        (* \`break\` statement is not supported in LIGO *);
+      } else block {
+        skip
+      };
+      j := j + 1n;
+    };
+  } with (unit);`,
   },
   {
     title: "Special variables",
+    description: `Some of special Solidity variables have analogues in Ligo. 
+
+There is no analogous to \`msg.data\`.
+
+As the current time is of the \`timestamp\` type, the subtraction of the beginning of the Unix epoch is used to convert it to \`nat\`. This step usually should be omitted as most of operations with time can be done with \`timestamp\` and is present only for Solidity compatibility.`,
+    solidity: `contract Test {
+  function test() public payable {
+      address sender = msg.sender;
+      address source = tx.origin;
+      uint value = msg.value;
+      bytes memory data = msg.data;
+      uint time = now;
+      uint blockTimestamp = block.timestamp;
+  }
+}`,
+    ligo: `type state is unit;
+
+function test (const res__unit : unit) : (unit) is
+  block {
+    const res__sender : address = Tezos.sender;
+    const res__source : address = Tezos.source;
+    const value : nat = (amount / 1mutez);
+    const data : bytes = ("00": bytes);
+    const time : nat = abs(now - ("1970-01-01T00:00:00Z" : timestamp));
+    const blockTimestamp : nat = abs(now - ("1970-01-01T00:00:00Z" : timestamp));
+  } with (unit);`,
   },
   {
     title: "Imports",
+    description: `For convenience, the Ligo has macros for importing the code from local files. It can not be reproduced by transpiler but the syntaxis the following:
+
+\`\`\`jsx
+import "./ERC20.sol";
+\`\`\`
+
+\`\`\`jsx
+#import "./ERC20.ligo"
+// or
+#import "./ERC20.tz"
+\`\`\`
+
+Both Michelson and Ligo files are supported.`,
   },
   {
     title: "Functions visibility and modifiers ",
+    description: `The Solidity smart contracts have functions visibility such as \`external\`, \`public\`, \`internal\` and \`private\`. Ligo contracts are organized in a completely different way.  All the functions are internal and the public methods are defined using the first argument of the \`main\` function. 
+
+Main function takes exactly two arguments - user \`action\` and on-chain \`state\` - and return two values - a list of external operations and an updated \`state\`. When the contract is originated, the initial value of the storage is provided. When a main function is later called, only the parameter is provided, but the type of a main function contains both.
+
+If the \`action\` is of Variant type its subtypes are interpreted as public functions interface otherwise main function is determined as the \`default\` entrypoint with the arguments of the same type as \`action\`. 
+
+Example of the contracts with the only default public function/default entrypoint:
+
+\`\`\`jsx
+type parameter is string
+
+type storage is record [
+  counter : nat;
+  name    : string
+]
+
+type return is list (operation) * storage
+
+function main (const s : string; const store : storage) : return is
+  ((nil : list (operation)), store with record [name = s])
+\`\`\`
+
+Example of the contracts with the few public methods/few entrypoints:
+
+\`\`\`jsx
+type parameter is
+| Action_A of nat
+| Action_B of string
+
+type storage is record [
+  counter : nat;
+  name    : string
+]
+
+type return is list (operation) * storage
+
+function func_A (const n : nat; const store : storage) : return is
+  ((nil : list (operation)), store with record [counter = n])
+
+function func_B (const s : string; const store : storage) : return is
+  ((nil : list (operation)), store with record [name = s])
+
+function main (const action : parameter; const store : storage): return is
+  case action of
+  | Action_A (n) -> func_A (n, store)
+  | Action_B (s) -> func_B (s, store)
+  end
+\`\`\`
+
+**Note:** the name of the entrypoint is the name of variant subtype and not the function itself.
+
+The operations list is the queue of other function calls that should be executed during the transaction. They can involve other contract calls, external XTZ transfers or be directed to the same contract. They will be discussed in the advanced part. 
+
+Read-only functions have a different representation in Ligo and  \`pure\` / \`view\` functions are more complicated in Tezos scope. The key difference lays is the requirement to consume the receiver contract address as an argument. So the result of the return value is always sent to another contract as a separate operation. Consider the contract with default view etrypoint that returns its storage to the \`contr\`:
+
+\`\`\`jsx
+type storage is nat
+type return is list (operation) * storage
+
+function main (const contr : contract(storage); var s : storage) : return is
+  (list [transaction(s, 0tz, contr)], s)
+\`\`\`
+
+How the contract \`contr\` processes the received value is out of this chapter's scope.`,
+    solidity: `contract Test {
+  uint private data;
+
+  function f(uint a) private pure returns(uint b) { return a + 1; }
+  function setData(uint a) public { data = a; }
+  function getData() public view returns(uint) { return data; }
+  function compute(uint a, uint b) internal pure returns (uint) { return a + b; }
+}`,
+    ligo: `type setData_args is record
+  a : nat;
+end;
+
+type getData_args is record
+  callbackAddress : address;
+end;
+
+type state is record
+  data : nat;
+end;
+
+type router_enum is
+  | SetData of setData_args
+ | GetData of getData_args;
+
+function f (const a : nat) : (nat) is
+  block {
+    const b : nat = 0n;
+  } with ((a + 1n));
+
+function setData (const self : state; const a : nat) : (state) is
+  block {
+    self.data := a;
+  } with (self);
+
+function getData (const self : state) : (nat) is
+  block {
+    skip
+  } with (self.data);
+
+function compute (const a : nat; const b : nat) : (nat) is
+  block {
+    skip
+  } with ((a + b));
+
+function main (const action : router_enum; const self : state) : (list(operation) * state) is
+  (case action of
+  | SetData(match_action) -> ((nil: list(operation)), setData(self, match_action.a))
+  | GetData(match_action) -> block {
+    const tmp : (nat) = getData(self);
+    var opList : list(operation) := list transaction((tmp), 0mutez, (get_contract(match_action.callbackAddress) : contract(nat))) end;
+  } with ((opList, self))
+  end);`,
   },
 ];
