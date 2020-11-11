@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MonacoEditor from "react-monaco-editor";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -6,13 +6,23 @@ import { Link } from "woozie";
 
 import Layout from "./Layout";
 import { sections } from "../resources/sections";
+import clsx from "clsx";
 
 interface CoursePageProps {
   selectedSection: number;
 }
 
+enum TranspilationStatus {
+  transpiling = "Transpiling...",
+  success = "Successfully transpiled Solidity to Ligo",
+  error = "Error occured during transpilation"
+}
+
 const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
   const section = sections[selectedSection];
+  const [ligoCode, setLigoCode] = useState(section.ligo);
+  const [transpilationStatus, setTranspilationStatus] = useState<TranspilationStatus>(TranspilationStatus.success);
+
   return (
     <Layout selectedSection={selectedSection}>
       {/* <div className="flex flex-row max-w-full w-full h-full no-wrap"> */}
@@ -51,21 +61,36 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
         <MonacoEditor
           language="sol"
           theme="vs-dark"
-          value={section.solidity}
+          defaultValue={section.solidity}
           options={{
             fontSize: 14,
             minimap: {
               enabled: false,
             },
           }}
-          // onChange={(...args) => console.log(args)}
+          onChange={async (code) => {
+            setTranspilationStatus(TranspilationStatus.transpiling);
+            if (window && (window as any).compile) {
+              try {
+                const result = await (window as any).compile(code);
+                setLigoCode(result.result)
+                setTranspilationStatus(TranspilationStatus.success);
+              } catch (e) {
+                setTranspilationStatus(TranspilationStatus.error);
+              }
+            }
+          }}
           editorDidMount={(_, editor) => console.log(editor)}
         />
-        <hr />
+        <div className={clsx("h-10 w-full px-6 font-bold text-white text-center text-sm", {
+          "bg-green-500": transpilationStatus === TranspilationStatus.success,
+          "bg-indigo-500": transpilationStatus === TranspilationStatus.transpiling,
+          "bg-red-500": transpilationStatus === TranspilationStatus.error
+        })}>↓ {transpilationStatus}</div>
         <MonacoEditor
           language="pascaligo"
           theme="vs-dark"
-          value={section.ligo}
+          value={ligoCode}
           options={{
             ariaLabel: 'Solidity',
             fontSize: 14,
