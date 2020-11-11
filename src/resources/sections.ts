@@ -13,7 +13,7 @@ Don't worry if it seems too complicated to grasp: each construction is explained
   address public owner;
 
   function changeOwner(address newOwner) public {
-      owner = newOwner;̋̋
+      owner = newOwner;
   }
   function makeBetter() puablic {
       quality++;   
