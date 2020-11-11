@@ -58,8 +58,8 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
               enabled: false,
             },
           }}
-          onChange={(...args) => console.log(args)}
-          editorDidMount={(...args) => console.log(args)}
+          // onChange={(...args) => console.log(args)}
+          editorDidMount={(_, editor) => console.log(editor)}
         />
         <hr />
         <MonacoEditor
@@ -67,6 +67,7 @@ const CoursePage: React.FC<CoursePageProps> = ({ selectedSection }) => {
           theme="vs-dark"
           value={section.ligo}
           options={{
+            ariaLabel: 'Solidity',
             fontSize: 14,
             minimap: {
               enabled: false,

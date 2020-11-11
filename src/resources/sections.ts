@@ -583,15 +583,249 @@ function test (const self : state) : (state) is
   },
   {
     title: "Elementary Types Summary",
+    description: `Value, or elementary, types are the type variables of which are always passed by value. In Solidity, they include: 
+
+- booleans
+- integers
+- addresses
+- fixed-sized byte arrays
+- contract types
+- enumerations
+- some types of literals.
+
+**Note:** all Michelson primitives are loaded to the stack directly.  There is no such a term as variables under the hood. So the separation to value and reference type isn't applicable for Ligo. 
+
+Ligo booleans resemble the Solidity type. 
+
+The \`int\` is used instead of \`intX\` and \`nat\` type is used instead of \`uintX\`.
+
+The addresses are quite interesting. Ethereum addresses have a different format compared to Tezos. In Solidity they are represented by bytes20 array meanwhile in Ligo there are no native address literals but base58check string can be converted to address type with \`(addr_str: address)\` expression. Sol2Ligo doesn't transpile it properly and Ligo compiler will throw an error in order the developer can notice the wrong address format. 
+
+Bytes in Ligo are represent as a hex number but not strings. 
+
+There is no enumeration type. In most cases variant type can replace it. The only downside is that it can not be converted to integers(that is the reason why transpiler doesn't convert Solidity enums to variant type).
+
+Ligo also provide the type for XTZ token units. For instance:
+\`\`\`jsx
+const amount : tez = 10mutez; 
+\`\`\`
+
+**Note:** the true Ligo developer would replace:
+
+\`\`\`jsx
+const langEnum_LIGO : nat = 0n;
+const langEnum_SOL : nat = 1n;
+...
+const langEnum : nat = langEnum_SOL;
+\`\`\`
+
+with:
+
+\`\`\`jsx
+type langEnum is
+| LIGO
+| SOL
+...
+const langEnum : LangEnum = SOL;
+\`\`\``,
+    solidity: `contract Test {
+  enum LangEnum { LIGO, SOL }  
+	function test() public {
+        // boolean
+    bool boolean = false;  
+  
+    // integers
+    int32  intVar0 = -603;
+    int256  intVar1 = -60313; 
+    uint32  uintVar0 = 60313; 
+    uint128  uintVar1 = 613; 
+    
+    // address
+    address addressVar = 0x0000000000000000000000000000000000000000;
+
+    // bytes & strings
+    string  memory str = "TezosIsTheBest";
+    bytes memory b0  = "0121";
+    bytes1 b1 = "a";  
+    
+    // enumerations
+    LangEnum langEnum = LangEnum.SOL;
+  }
+}`,
+    ligo: `type state is unit;
+
+const langEnum_LIGO : nat = 0n;
+const langEnum_SOL : nat = 1n;
+(* enum LangEnum converted into list of nats *)
+
+function test (const res__unit : unit) : (unit) is
+  block {
+    const boolean : bool = False;
+    const intVar0 : int = -(603);
+    const intVar1 : int = -(60313);
+    const uintVar0 : nat = 60313n;
+    const uintVar1 : nat = 613n;
+    const addressVar : address = (0x0000000000000000000000000000000000000000 : address);
+    const str : string = "TezosIsTheBest";
+    const b0 : bytes = 0x48495049;
+    const b1 : bytes = 0x97;
+    const langEnum : nat = langEnum_SOL;
+  } with (unit);`,
   },
   {
     title: "Structures",
+    description: `Ligo records serve as Solidity structures. A record is made of a set of fields, which are made of a field name and a field type. Given a value of a record type, the value bound to a field can be accessed by giving its field name to a special operator (\`.\`).
+
+There is a special generated "default" Person - \`test_Person_default\`  used for assignment the \`defaultPerson\`.  It is needed as unlike Solidity,  Ligo doesn't have build-in default values for types but all variables must be assigned during the declaration.`,
+    solidity: `contract Test {
+  struct Person {
+      address payable account;
+      uint age;
+      uint skill;
+      uint bet;
+      mapping (address => uint) referralRewards;
+  }
+
+  function test() public {
+    Person memory person = Person(msg.sender, 30, 100, 0);
+    Person memory defaultPerson;
+  }
+}`,
+    ligo: `type test_Person is record
+  account : address;
+  age : nat;
+  skill : nat;
+  bet : nat;
+  referralRewards : map(address, nat);
+end;
+
+type state is unit;
+
+const test_Person_default : test_Person = record [ account = burn_address;
+  age = 0n;
+  skill = 0n;
+  bet = 0n;
+  referralRewards = (map end : map(address, nat)) ];
+
+function test (const res__unit : unit) : (unit) is
+  block {
+    const person : test_Person = record [ account = Tezos.sender;
+      age = 30;
+      skill = 100;
+      bet = 0 ];
+    const defaultPerson : test_Person = test_Person_default;
+  } with (unit);`,
   },
   {
-    title: "Mappings ",
+    title: "Mappings",
+    description: `Both Ligo and Solidity have mapping types but they act quite differently. 
+
+First, there are two types of mappings: 
+
+- \`map\` : used for small amount of entries and is fully deserialized before contract execution
+- \`big_map\` : designed for big number of entries and the needed values are loaded by request.
+
+They are declared as: 
+
+\`\`\`jsx
+(* syntax: var name: map : map(key_type, value_type) = map[ 
+  key0 -> value[; key1 -> value1[; ...]]  
+] *)
+const ledger : map(address, nat) = map [];
+const big_ledger : big_map(address, nat) = map [Tezos.sender -> 100n;];
+\`\`\`
+
+Second, Ligo doesn't have default values for absent members. The value retrieved from the map is of \`option\` type.  \`None\` is returned If the key doesn't exist, and \`Some(value)\` otherwise:
+
+\`\`\`jsx
+const my_balance : option (nat) = ledger [Tezos.sender] 
+\`\`\`
+
+Third, it is possible to iterate over the \`map\`.  But the iterated operation has no return value: its only useful for causing side-effects or checking some requirements. 
+
+\`\`\`jsx
+function check_balance (const user : address; const balance : nat) : unit is
+      if balance > 1n then Unit else (failwith ("Balance too low") : unit)
+Map.iter (check_balance, ledger);
+\`\`\`
+
+Commonalities can be explored in the example.`,
+    solidity: `contract Test {
+    mapping(int => int) public m;
+
+  function test() public {
+        m[4] = 8;
+        m[15] = m[16];
+        delete m[23];
+      }
+}`,
+    ligo: `type state is record
+  m : map(int, int);
+end;
+
+function test (const self : state) : (state) is
+  block {
+    self.m[4] := 8;
+    self.m[15] := (case self.m[16] of | None -> 0 | Some(x) -> x end);
+    remove 23 from map self.m;
+  } with (self);`,
   },
   {
     title: "Array-like types",
+    description: `There are fixed and dynamic-sized arrays in Solidity. Their elements can be accessed by index and the type member \`length\` is defined. The dynamic arrays also have \`push\` and \`pop\` operators.  
+
+Ligo doesn't have the exact type that implements all the operations that can be done on the Solidity array but it introduces 3 other collection types: tuples, lists, sets.
+
+[Comparison](https://www.notion.so/cc2793612ebd4ad3b30845b5019f6a06)
+
+Each type deserves more attention and will be discussed in depth further. 
+
+Another approach to simulate the Solidity arrays functionality is to use maps with numeric keys.  But it isn't the advised path of the respected Ligo ninja.`,
+    solidity: `
+contract Test {
+    uint[] a1;
+    
+  function testFixedSized() public {
+        uint[4] memory a0 = [uint(1), 2, 3, 4];
+
+        uint len = a0.length;
+        uint element = a0[1];
+      }
+      
+  function testDynamicSized() public {
+        a1 = new uint[](5);
+        
+        uint len = a1.length;
+        uint element = a1[1];
+        
+        a1.push(1);
+        // a1.pop();
+      }
+}`,
+    ligo: `type state is record
+  a1 : map(nat, nat);
+end;
+
+function testFixedSized (const res__unit : unit) : (unit) is
+  block {
+    const a0 : map(nat, nat) = map
+      0n -> abs(1);
+      1n -> 2n;
+      2n -> 3n;
+      3n -> 4n;
+    end;
+    const len : nat = size(a0);
+    const element : nat = (case a0[1n] of | None -> 0n | Some(x) -> x end);
+  } with (unit);
+
+function testDynamicSized (const self : state) : (state) is
+  block {
+    self.a1 := map end (* args: 5 *);
+    const len : nat = size(self.a1);
+    const element : nat = (case self.a1[1n] of | None -> 0n | Some(x) -> x end);
+    const tmp_0 : map(nat, nat) = self.a1;
+    tmp_0[size(tmp_0)] := 1n;
+  } with (self);`,
   },
   {
     title: "Tuples + Practice 1",
