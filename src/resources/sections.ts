@@ -15,7 +15,7 @@ Don't worry if it seems too complicated to grasp: each construction is explained
   function changeOwner(address newOwner) public {
       owner = newOwner;
   }
-  function makeBetter() puablic {
+  function makeBetter() public {
       quality++;   
   }
   function makeWorse() public{
