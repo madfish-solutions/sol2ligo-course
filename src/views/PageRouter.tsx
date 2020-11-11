@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Router, Redirect, useLocation, HistoryAction } from "woozie";
 
-import Home from "./Home";
+// import Home from "./Home";
 import CoursePage from "./CoursePage";
 
 const ROUTE_MAP = Router.createMap([
-  ["/", () => <Home />],
+  ["/", () => <Redirect to="/section/0" />],
   [
     "/section/:id?",
     ({ id }) =>
