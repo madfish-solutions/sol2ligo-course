@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children, selectedSection }) => {
         <header className="flex items-center justify-end px-6 py-4 bg-gray-100 border-b-4 border-gray-200">
           <div className="flex text-md">
             <Link
-              to="/"
+              to="/section/0"
               className="mx-5 font-medium text-gray-500 hover:text-gray-900"
             >
               Get Started
