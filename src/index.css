@@ -24,3 +24,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.code-pane {
+  background-color: #1E1E1E;
+}

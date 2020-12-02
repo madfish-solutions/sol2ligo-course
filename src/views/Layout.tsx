@@ -8,6 +8,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, selectedSection }) => {
   const [sidebarState, alterSidebarState] = useState(false);
+
   return (
     <div className="flex h-screen bg-white-200">
       <Sidebar
@@ -15,12 +16,12 @@ const Layout: React.FC<LayoutProps> = ({ children, selectedSection }) => {
         isOpen={sidebarState}
         toggle={() => alterSidebarState(!sidebarState)}
       />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="flex justify-end items-center py-4 px-6 bg-white border-b-4 border-gray-200 bg-gray-100">
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <header className="flex items-center justify-end px-6 py-4 bg-gray-100 border-b-4 border-gray-200">
           <div className="flex text-md">
             <Link
               to="/"
-              className="font-medium text-gray-500 hover:text-gray-900 mx-5"
+              className="mx-5 font-medium text-gray-500 hover:text-gray-900"
             >
               Get Started
             </Link>
@@ -28,7 +29,7 @@ const Layout: React.FC<LayoutProps> = ({ children, selectedSection }) => {
               href="https://github.com/madfish-solutions/sol2ligo"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-gray-500 hover:text-gray-900 mx-5"
+              className="mx-5 font-medium text-gray-500 hover:text-gray-900"
             >
               Github
             </a>
@@ -36,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children, selectedSection }) => {
               href="https://madfish-solutions.github.io/sol2ligo/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-indigo-600 hover:text-gray-900 mx-5"
+              className="mx-5 font-medium text-indigo-600 hover:text-gray-900"
             >
               Try sol2ligo
             </a>
