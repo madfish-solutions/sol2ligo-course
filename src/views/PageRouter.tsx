@@ -5,8 +5,7 @@ import Home from "./Home";
 import CoursePage from "./CoursePage";
 
 const ROUTE_MAP = Router.createMap([
-  ["/home", () => <Home />],
-  ["/", () => <Redirect to="/section/0" />],
+  ["/", () => <Home />],
   [
     "/section/:id?",
     ({ id }) =>
