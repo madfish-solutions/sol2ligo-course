@@ -2,6 +2,8 @@ import React from "react";
 import clsx from "clsx";
 import { Link } from "woozie";
 
+import Logo from './Logo';
+
 import { sections } from "../resources/sections";
 
 interface SidebarItemProps {
@@ -53,7 +55,6 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
-  children,
   isOpen,
   toggle,
   selectedSection,
@@ -72,12 +73,10 @@ const Sidebar: React.FC<SidebarProps> = ({
           isOpen ? "translate-x-0 ease-out" : "-translate-x-full ease-in"
         )}
       >
-        <div className="flex items-center justify-center flex-col">
-          <span className="text-gray-800 text-xl font-semibold self-start p-4 leading-6 border-b-4 border-gray-200 w-full">
-            🗄 sol2ligo handbook
-          </span>
-          <div className="flex items-center flex-col py-4 max-w-full">
-            <div className="text-lg text-gray-700 font-bold leading-6 flex-shrink-0 self-start my-2 pl-4">
+        <div className="flex flex-col items-center justify-center">
+          <Logo className="w-full border-gray-200"/>
+          <div className="flex flex-col items-center max-w-full py-4">
+            <div className="self-start flex-shrink-0 pl-4 my-2 text-lg font-bold leading-6 text-gray-700">
               Contents
             </div>
             {sections.map((section, idx) => (

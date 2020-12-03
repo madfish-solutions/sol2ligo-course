@@ -5,7 +5,13 @@ module.exports = {
   },
   purge: [],
   theme: {
-    extend: {},
+    extend: {
+      maxHeight: {
+        '60': '20rem',
+        '75': '25rem',
+        '90': '30rem'
+      }
+    },
   },
   variants: {
     textColor: ['responsive', 'hover', 'focus', 'group-hover'],
