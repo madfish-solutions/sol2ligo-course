@@ -12,7 +12,9 @@ const FooterLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (
   <a
     className="pb-1 mx-4 mt-2 transition duration-300 border-b-2 border-transparent hocus:text-gray-300 hocus:border-gray-300"
     {...props}
-  />
+  >
+    {props.children}
+  </a>
 );
 
 const SocialLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (
@@ -21,11 +23,13 @@ const SocialLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (
   <a
     className="inline-block mx-4 text-gray-100 transition duration-300 cursor-pointer hover:text-gray-500"
     {...props}
-  />
+  >
+    {props.children}
+  </a>
 );
 
 
-export default () => {
+const Footer: React.FC = () => {
   return (
     <div className="max-w-screen-xl py-10 mx-auto lg:py-10">
       <div className="flex flex-col items-center justify-center px-8">
@@ -58,3 +62,5 @@ export default () => {
     </div>
   );
 };
+
+export default Footer
