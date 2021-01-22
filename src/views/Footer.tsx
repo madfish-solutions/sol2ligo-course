@@ -34,11 +34,11 @@ export default () => {
           <Logo />
         </div>
         <div className="flex flex-col flex-wrap items-center justify-center font-medium sm:flex-row">
-          <FooterLink href="#">Home</FooterLink>
-          <FooterLink href="#">About</FooterLink>
-          <FooterLink href="#">Contact Us</FooterLink>
-          <FooterLink href="#">Blog</FooterLink>
-          <FooterLink href="#">Reviews</FooterLink>
+          <FooterLink>Home</FooterLink>
+          <FooterLink>About</FooterLink>
+          <FooterLink>Contact Us</FooterLink>
+          <FooterLink>Blog</FooterLink>
+          <FooterLink>Reviews</FooterLink>
         </div>
         <div className="">
           <SocialLink href="https://facebook.com">
