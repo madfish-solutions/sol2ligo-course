@@ -2,7 +2,6 @@ const libs = [
   "/solc/soljson-v0.4.26+commit.4563c3fc.js",
   "/solc/soljson-v0.5.11+commit.c082d0b4.js",
   "/solc/sol_wrapper.js",
-  "/sol2ligo.js",
 ];
 
 const cache = new Map<string, HTMLScriptElement>(); // naive tracking of loaded scripts for HMR
@@ -30,7 +29,9 @@ const loadScriptTag = (src: string): Promise<HTMLScriptElement> =>
   });
 
 export const loadTranspilerResources = async () => {
+  (window as any)._solc = {};
   for (const lib of libs) {
     await loadScriptTag(lib);
   }
+  (window as any).compile = (await import("sol2ligo")).compile;
 };
