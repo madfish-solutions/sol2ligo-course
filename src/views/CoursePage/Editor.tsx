@@ -59,8 +59,12 @@ const Editor: React.FC<EditorProps> = ({ ligo, solidity }) => {
           setTranspilationStatus(TranspilationStatus.transpiling);
           if (window && (window as any).compile) {
             try {
-              const result = await (window as any).compile(code);
-              setLigoCode(result.result);
+              const result = await (window as any).compile(code, {
+                router: false,
+                replace_enums_by_nats: false,
+                contract: ""
+              });
+              setLigoCode(result.ligo_code);
               setTranspilationStatus(TranspilationStatus.success);
             } catch (e) {
               setTranspilationStatus(TranspilationStatus.error);
