@@ -1,4 +1,3 @@
-console.log(require("./contract-structure/content.md"));
 const sections = [
   {
     slug: "contract-structure",
