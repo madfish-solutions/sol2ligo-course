@@ -5,7 +5,7 @@ import Article from "./CoursePage/Article";
 import Navigation from "./CoursePage/Navigation";
 import Editor from "./CoursePage/Editor";
 
-import { sections } from "../resources/sections";
+import sections from "../content";
 
 interface CoursePageProps {
   selectedSection: number;

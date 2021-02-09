@@ -4,7 +4,7 @@ import { Link } from "woozie";
 
 import Logo from './Logo';
 
-import { sections } from "../resources/sections";
+import sections from "content";
 
 interface SidebarItemProps {
   link: string;

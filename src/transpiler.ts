@@ -12,7 +12,7 @@ const loadScriptTag = (src: string): Promise<HTMLScriptElement> =>
   new Promise((resolve, reject) => {
     setTimeout(() => {
       if (cache.has(src)) {
-        return resolve(cache.get(src));
+        return resolve(cache.get(src)!);
       }
 
       const tag = document.createElement("script");

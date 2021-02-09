@@ -3,6 +3,7 @@ const {
   override,
   addPostcssPlugins,
   addWebpackPlugin,
+  addWebpackModuleRule,
 } = require("customize-cra");
 
 module.exports = override(
@@ -48,5 +49,6 @@ module.exports = override(
         "wordPartOperations",
       ],
     })
-  )
+  ),
+  addWebpackModuleRule({ test: /\.(md|sol|ligo)$/, use: "raw-loader" })
 );

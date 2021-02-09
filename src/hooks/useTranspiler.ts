@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect } from "react";
-import { loadTranspilerResources } from "../resources/transpiler";
+import { loadTranspilerResources } from "../transpiler";
 
 export default function useTranspiler() {
   const [error, setError] = useState<string | undefined>(undefined);
