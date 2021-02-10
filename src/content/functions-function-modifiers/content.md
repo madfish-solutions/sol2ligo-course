@@ -8,7 +8,7 @@ function func_name (var arg0 : arg0_type[; var arg1 : arg1_type[ ... ]]) : retur
   block {...} with return_value
 ```
     
-If few instructions should be executed, the body is block constructions.
+If more than one expression should be executed, the body is a block construction.
     
 ```jsx
 function increment (var n : int) : int is 
@@ -26,4 +26,4 @@ function increment (var n : int) : int is n + 4n
     
 There are no modifiers and analogs for Solidity view/pure functions.
     
-In Ligo at list one argument and any return value must be present. In the example below, if the function doesn't require any arguments, in Ligo it consumes one argument of `unit` type (similar to `void` in C/C++; nothing). The same applies to functions without return value (that are absolutely pointless in Tezos): the return value and its type is replaced by `unit`.
+In Ligo at least one argument and any return value must be present. In the example on the right, if the function doesn't require any arguments, in Ligo it consumes one argument of `unit` type (similar to `void` in C/C++; nothing). The same applies to functions without return value (that are absolutely pointless in Tezos): the return value and its type is replaced by `unit`.
