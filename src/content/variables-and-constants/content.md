@@ -6,7 +6,7 @@ const const_name : const_type = value;
 
 Unlike Solidity, Ligo allows to declare constants both in function block and in the global scope, pass constants as function arguments. 
 
-On the other hand, Ligo doesn't have a default values so the value should be explicitly set during declaration. Such a construction will raise an error:
+On the other hand, Ligo doesn't have default values so the value should be explicitly set during declaration. Such a construction will raise an error:
 
 ```jsx
 var name : nat;
