@@ -2,6 +2,7 @@
   "name": "sol2ligo-course",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://madfish-solutions.github.io/sol2ligo-course/",
   "dependencies": {
     "@svgr/webpack": "^5.4.0",
     "@tailwindcss/typography": "^0.2.0",

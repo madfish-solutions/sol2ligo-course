@@ -34,7 +34,7 @@ jobs:
     - name: Build
       run: yarn build
       env:
-        PUBLIC_URL: /sol2ligo-course
+        PUBLIC_URL: https://madfish-solutions.github.io/sol2ligo-course/
 
     - name: Deploy
       run: |
