@@ -1,4 +1,4 @@
-Solidity has a convenient type casting but in Ligo it can be a bit tricky. The example of the most common conversion:
+Solidity has a convenient type casting but in Ligo it can be a bit tricky. The most common conversions are:
 ```jsx
 (* nat <- int *)
 const u : nat = abs(1);
