@@ -1,6 +1,6 @@
 Enums are one way to create a user-defined type in Solidity. They are explicitly convertible to and from all integer types. Ligo doesn't have enumerations but introduces variant types instead.
 
-A variant type is a user-defined type represented data that may take on multiple different forms, where each form is marked by an explicit tag. The simplest example that works in the same way as an enumerator: 
+A variant type is a user-defined type representing data that may take on multiple different forms, where each form is marked by an explicit tag. The simplest example that works in the same way as an enumerator: 
 
 ```jsx
 type day is 
