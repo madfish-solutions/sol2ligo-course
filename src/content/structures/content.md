@@ -1,3 +1,0 @@
-Ligo records serve as Solidity structures. A record is made of a set of fields, which are made of a field name and a field type. Given a value of a record type, the value bound to a field can be accessed by giving its field name to a special operator (`.`).
-
-There is a special generated "default" Person - `test_Person_default`  used for assignment the `defaultPerson`.  It is needed as unlike Solidity,  Ligo doesn't have build-in default values for types but all variables must be assigned during the declaration.
