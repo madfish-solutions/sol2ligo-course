@@ -1,8 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { enableHashRouting } from "woozie";
+
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
+/* for serving from subfolder */ 
+enableHashRouting();
 
 ReactDOM.render(
   <React.StrictMode>
