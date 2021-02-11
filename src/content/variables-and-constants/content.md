@@ -12,4 +12,4 @@ On the other hand, Ligo doesn't have a default values so the value should be exp
 var name : nat;
 ```
     
-**Note:** despite the ****`bool b` is reassigned in the code, transpiler converts it into a constant variable. Ligo compiler won't throw an error in this case: `const/var` separation is designed for the developer experience.
+**Note:** despite the `bool b` is reassigned in the code, transpiler converts it into a constant variable. Ligo compiler won't throw an error in this case: `const/var` separation is designed for the developer experience.
