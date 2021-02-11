@@ -26,7 +26,7 @@ const len : nat = b1.length;
 
 Strings resemble the Solidity strings with defined concatenation and slicing operators.  
 
-In the example below the code won't be compiled because access by the index isn't supported in Ligo. Nevertheless, the true Ligo developer could overcome it by such a line:
+In the example below the code won't be compiled because access by the index isn't supported in Ligo. Nevertheless, a Ligo developer could overcome it by such a line:
 
 ```jsx
 const b : bytes = Bytes.sub(0n, 1n, b0);
