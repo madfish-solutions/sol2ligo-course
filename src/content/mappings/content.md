@@ -1,9 +1,9 @@
 Both Ligo and Solidity have mapping types but they act quite differently. 
 
-First, there are two types of mappings: 
+First, there are two types of mappings in Tezos: 
 
 - `map` : used for small amount of entries and is fully deserialized before contract execution
-- `big_map` : designed for big number of entries and the needed values are loaded by request.
+- `big_map` : designed for large number of entries and the needed values are loaded by request.
 
 They are declared as: 
 
