@@ -49,7 +49,7 @@ function main (const action : parameter; const store : storage): return is
 
 **Note:** the name of the entrypoint is the name of variant subtype and not the function itself.
 
-The operations list is the queue of other function calls that should be executed during the transaction. They can involve other contract calls, external XTZ transfers or be directed to the same contract. They will be discussed in the advanced part. 
+The operations list is the queue of operations that should be executed after this. They can involve other contract calls, external XTZ transfers or be directed to the same contract.
 
 Read-only functions have a different representation in Ligo and  `pure` / `view` functions are more complicated in Tezos scope. The key difference lays is the requirement to consume the receiver contract address as an argument. So the result of the return value is always sent to another contract as a separate operation. Consider the contract with default view etrypoint that returns its storage to the `contr`:
 
