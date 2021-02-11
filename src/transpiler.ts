@@ -3,7 +3,7 @@ const libs = [
   "/solc/soljson-v0.5.11+commit.c082d0b4.js",
   "/solc/sol_wrapper.js",
   "/sol2ligo.js",
-];
+].map((item) => `${process.env.PUBLIC_URL || ""}${item}`);
 
 const cache = new Map<string, HTMLScriptElement>(); // naive tracking of loaded scripts for HMR
 const body = document.getElementsByTagName("body")[0];

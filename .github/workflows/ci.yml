@@ -33,6 +33,8 @@ jobs:
 
     - name: Build
       run: yarn build
+      env:
+        PUBLIC_URL: /sol2ligo-course
 
     - name: Deploy
       run: |
