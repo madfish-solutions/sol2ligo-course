@@ -49,7 +49,7 @@ export default function HomePage() {
               </div>
             </div>
             <img
-              src="/person.svg"
+              src={`${process.env.PUBLIC_URL || ''}/person.svg`}
               alt="Person"
               className="flex-1 hidden max-h-75 lg:block"
             />
