@@ -17,4 +17,4 @@ const a : int = 5
 const b : nat = 5n
 ```
 
-In Solidity time is represented by unsigned integers, but Tezos VM introduces own type for time called `timestamp`. Only addition, subtraction, and comparison are defined for the type.
+In Solidity time is represented by unsigned integers, but Tezos VM introduces own type for time called `timestamp`. Only addition, subtraction, and comparison are defined for this type.
