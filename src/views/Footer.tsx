@@ -6,16 +6,16 @@ import { ReactComponent as YoutubeIcon } from "../images/youtube-icon.svg";
 
 import Logo from './Logo';
 
-const FooterLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (
-  props: any
-) => (
-  <a
-    className="pb-1 mx-4 mt-2 transition duration-300 border-b-2 border-transparent hocus:text-gray-300 hocus:border-gray-300"
-    {...props}
-  >
-    {props.children}
-  </a>
-);
+// const FooterLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (
+//   props: any
+// ) => (
+//   <a
+//     className="pb-1 mx-4 mt-2 transition duration-300 border-b-2 border-transparent hocus:text-gray-300 hocus:border-gray-300"
+//     {...props}
+//   >
+//     {props.children}
+//   </a>
+// );
 
 const SocialLink: React.FC<React.AnchorHTMLAttributes<HTMLAnchorElement>> = (
   props: any
@@ -36,13 +36,6 @@ const Footer: React.FC = () => {
         <div className="flex items-center justify-center md:justify-start">
           {/* <div className="w-8"></div> */}
           <Logo />
-        </div>
-        <div className="flex flex-col flex-wrap items-center justify-center font-medium sm:flex-row">
-          <FooterLink>Home</FooterLink>
-          <FooterLink>About</FooterLink>
-          <FooterLink>Contact Us</FooterLink>
-          <FooterLink>Blog</FooterLink>
-          <FooterLink>Reviews</FooterLink>
         </div>
         <div className="">
           <SocialLink href="https://facebook.com">
