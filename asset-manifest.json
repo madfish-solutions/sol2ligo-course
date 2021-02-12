@@ -5,13 +5,13 @@
     "static/js/1.371c6d31.chunk.js": "/sol2ligo-course/static/js/1.371c6d31.chunk.js",
     "static/js/1.371c6d31.chunk.js.map": "/sol2ligo-course/static/js/1.371c6d31.chunk.js.map",
     "main.css": "/sol2ligo-course/static/css/main.09896679.chunk.css",
-    "main.js": "/sol2ligo-course/static/js/main.9b7a4c5c.chunk.js",
-    "main.js.map": "/sol2ligo-course/static/js/main.9b7a4c5c.chunk.js.map",
+    "main.js": "/sol2ligo-course/static/js/main.f946cbde.chunk.js",
+    "main.js.map": "/sol2ligo-course/static/js/main.f946cbde.chunk.js.map",
     "runtime-main.js": "/sol2ligo-course/static/js/runtime-main.66a0b439.js",
     "runtime-main.js.map": "/sol2ligo-course/static/js/runtime-main.66a0b439.js.map",
     "static/css/4.7d99a32a.chunk.css": "/sol2ligo-course/static/css/4.7d99a32a.chunk.css",
-    "static/js/4.19d2f332.chunk.js": "/sol2ligo-course/static/js/4.19d2f332.chunk.js",
-    "static/js/4.19d2f332.chunk.js.map": "/sol2ligo-course/static/js/4.19d2f332.chunk.js.map",
+    "static/js/4.a2b1795e.chunk.js": "/sol2ligo-course/static/js/4.a2b1795e.chunk.js",
+    "static/js/4.a2b1795e.chunk.js.map": "/sol2ligo-course/static/js/4.a2b1795e.chunk.js.map",
     "static/js/5.a3cd5589.chunk.js": "/sol2ligo-course/static/js/5.a3cd5589.chunk.js",
     "static/js/5.a3cd5589.chunk.js.map": "/sol2ligo-course/static/js/5.a3cd5589.chunk.js.map",
     "static/js/6.973390c3.chunk.js": "/sol2ligo-course/static/js/6.973390c3.chunk.js",
@@ -161,7 +161,7 @@
     "json.worker.js.map": "/sol2ligo-course/json.worker.js.map",
     "static/css/4.7d99a32a.chunk.css.map": "/sol2ligo-course/static/css/4.7d99a32a.chunk.css.map",
     "static/css/main.09896679.chunk.css.map": "/sol2ligo-course/static/css/main.09896679.chunk.css.map",
-    "static/js/4.19d2f332.chunk.js.LICENSE.txt": "/sol2ligo-course/static/js/4.19d2f332.chunk.js.LICENSE.txt",
+    "static/js/4.a2b1795e.chunk.js.LICENSE.txt": "/sol2ligo-course/static/js/4.a2b1795e.chunk.js.LICENSE.txt",
     "static/js/65.fb08aaef.chunk.js.LICENSE.txt": "/sol2ligo-course/static/js/65.fb08aaef.chunk.js.LICENSE.txt",
     "static/media/codicon.css": "/sol2ligo-course/static/media/codicon.b3726f01.ttf",
     "static/media/facebook-icon.8f6512c4.svg": "/sol2ligo-course/static/media/facebook-icon.8f6512c4.svg",
@@ -174,8 +174,8 @@
   "entrypoints": [
     "static/js/runtime-main.66a0b439.js",
     "static/css/4.7d99a32a.chunk.css",
-    "static/js/4.19d2f332.chunk.js",
+    "static/js/4.a2b1795e.chunk.js",
     "static/css/main.09896679.chunk.css",
-    "static/js/main.9b7a4c5c.chunk.js"
+    "static/js/main.f946cbde.chunk.js"
   ]
 }
